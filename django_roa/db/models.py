@@ -14,8 +14,7 @@ from django.db import models
 from django.db.models import signals
 from django.db.models.options import Options
 from django.db.models.loading import register_models, get_model
-from django.db.models.base import ModelBase, subclass_exception, \
-    get_absolute_url, method_get_order, method_set_order
+from django.db.models.base import ModelBase, subclass_exception, method_get_order, method_set_order
 from django.db.models.fields.related import (OneToOneField, add_lazy_relation)
 from django.utils.functional import curry
 from django.core.serializers.base import DeserializationError
@@ -24,12 +23,12 @@ from django.core.serializers.python import Deserializer as PythonDeserializer, _
 from functools import update_wrapper
 
 from django.utils.encoding import force_unicode, smart_unicode
-from rest_framework.parsers import JSONParser, XMLParser, YAMLParser
-from rest_framework.renderers import JSONRenderer, XMLRenderer, YAMLRenderer
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 
 from restkit import Resource, RequestFailed, ResourceNotFound
-from django_roa.db import get_roa_headers
-from django_roa.db.exceptions import ROAException
+from . import get_roa_headers
+from .exceptions import ROAException
 
 logger = logging.getLogger("django_roa")
 
@@ -52,10 +51,10 @@ DEFAULT_CHARSET = getattr(settings, 'DEFAULT_CHARSET', 'utf-8')
 
 class ROAModelBase(ModelBase):
     def __new__(cls, name, bases, attrs):
-        if DJANGO_LT_1_7:
-            return cls._new_old_django(name, bases, attrs)
-        else:
-            return cls._new_recent_django(name, bases, attrs)
+        # if DJANGO_LT_1_7:
+        #     return cls._new_old_django(name, bases, attrs)
+        # else:
+        return cls._new_recent_django(name, bases, attrs)
 
     @classmethod
     def _new_recent_django(cls, name, bases, attrs):

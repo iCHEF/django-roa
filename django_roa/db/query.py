@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models import query
 from django.core import serializers
 # Django >= 1.5
-from django_roa.db import get_roa_headers
+from . import get_roa_headers
 
 try:
     from django.db.models.constants import LOOKUP_SEP
@@ -16,7 +16,7 @@ from django.db.models.query_utils import Q
 from django.utils.encoding import force_unicode
 
 from restkit import Resource, ResourceNotFound
-from django_roa.db.exceptions import ROAException, ROANotImplementedYetException
+from .exceptions import ROAException, ROANotImplementedYetException
 
 logger = logging.getLogger("django_roa")
 

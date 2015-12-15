@@ -1,6 +1,6 @@
 from django.db.models.manager import Manager
 
-from django_roa.db.query import RemoteQuerySet
+from .query import RemoteQuerySet
 
 
 class ROAManager(Manager):

@@ -6,9 +6,9 @@ from django.contrib.admin.options import ModelAdmin as DjangoModelAdmin
 from django.contrib.admin.options import StackedInline as DjangoStackedInline, \
                                          TabularInline as DjangoTabularInline
 
-from django_roa.db.models import ROAModel
-from django_roa.db.managers import ROAManager
-from django_roa.db.admin import ROAModelAdmin, ROAStackedInline, ROATabularInline
+from .db.models import ROAModel
+from .db.managers import ROAManager
+from .db.admin import ROAModelAdmin, ROAStackedInline, ROATabularInline
 
 ROA_MODELS = getattr(settings, "ROA_MODELS", False)
 Model = ROA_MODELS and ROAModel or DjangoModel
