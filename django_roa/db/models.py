@@ -25,6 +25,7 @@ from functools import update_wrapper
 from django.utils.encoding import force_unicode, smart_unicode
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
+from rest_framework import serializers
 
 from restkit import Resource, RequestFailed, ResourceNotFound
 from . import get_roa_headers
@@ -572,7 +573,13 @@ class ROAModel(models.Model):
         """
         Return a like Django Rest Framework serializer class
         """
-        raise NotImplementedError
+        class DefaultSerializer(serializers.ModelSerializer):
+
+            class Meta:
+                model = cls
+
+        return DefaultSerializer
+        # raise NotImplementedError
 
     def get_renderer(self):
         """
