@@ -329,6 +329,9 @@ class RemoteQuerySet(query.QuerySet):
         # useful for admin which relies on PKs
         elif kwargs.keys() == ['pk']:
             return self._get_from_id_or_pk(pk=kwargs['pk'])
+        # common way of distribution system of get particular object
+        elif kwargs.keys() == ['uuid']:
+            return self._get_from_id_or_pk(pk=kwargs['uuid'])
         # check the case of PK attribute with custom name
         elif kwargs.keys() == [custom_pk]:
             return self._get_from_id_or_pk(pk=kwargs[custom_pk])
