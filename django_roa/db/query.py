@@ -197,6 +197,7 @@ class RemoteQuerySet(query.QuerySet):
         An iterator over the results from applying this QuerySet to the
         remote web service.
         """
+
         resource = Resource(self.model.get_resource_url_list(),
                             filters=ROA_FILTERS, **ROA_SSL_ARGS)
         try:
@@ -233,7 +234,11 @@ class RemoteQuerySet(query.QuerySet):
                 raise ROAException(u'Invalid deserialization for %s model: %s' % (self.model, serializer.errors))
 
             for obj in serializer.data:
-                yield obj
+                clone = self._clone()
+                instance = clone.model()
+                for key in obj.keys():
+                    setattr(instance, key, obj[key])
+                yield instance
 
     def count(self):
         """
@@ -307,7 +312,9 @@ class RemoteQuerySet(query.QuerySet):
         if not serializer.is_valid():
             raise ROAException(u'Invalid deserialization for %s model: %s' % (self.model, serializer.errors))
 
-        return serializer.data
+        for key in serializer.data.keys():
+            setattr(instance, key, serializer.data[key])
+        return instance
 
     def get(self, *args, **kwargs):
         """

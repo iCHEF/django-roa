@@ -19,6 +19,7 @@ from django.db.models.fields.related import (OneToOneField, add_lazy_relation)
 from django.utils.functional import curry
 from django.core.serializers.base import DeserializationError
 from django.core.serializers.python import Deserializer as PythonDeserializer, _get_model
+from django.forms.models import model_to_dict
 
 from functools import update_wrapper
 
@@ -721,6 +722,7 @@ class ROAModel(models.Model):
             # Construct Json payload
             serializer = self.get_serializer(self)
             payload = self.get_renderer().render(serializer.data)
+            payload = model_to_dict(self)
 
             # Add serializer content_type
             headers = get_roa_headers()
@@ -750,7 +752,7 @@ class ROAModel(models.Model):
                                   force_unicode(resource.uri),
                                   force_unicode(payload),
                                   force_unicode(get_args)))
-                    response = resource.put(payload=payload, headers=headers, **get_args)
+                    response = resource.request('patch', payload=payload, headers=headers, **get_args)
                 except RequestFailed as e:
                     raise ROAException(e)
             else:
@@ -773,11 +775,13 @@ class ROAModel(models.Model):
             serializer = self.get_serializer(data=data)
             if not serializer.is_valid():
                 raise ROAException(u'Invalid deserialization for %s model: %s' % (self, serializer.errors))
-            try:
-                self.pk = int(serializer.object.pk)
-            except ValueError:
-                self.pk = serializer.object.pk
-            self = serializer.object
+            # try:
+            #     self.pk = int(serializer.object.pk)
+            # except ValueError:
+            #     self.pk = serializer.object.pk
+            for key in serializer.data.keys():
+                setattr(self, key, serializer.data[key])
+            # self = serializer.data
 
         if origin:
             signals.post_save.send(sender=origin, instance=self,
