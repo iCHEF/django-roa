@@ -96,7 +96,7 @@ class Article(ROAModel):
             base_name=cls.api_base_name,
 ```
 
-Setting Args
+Setting URL Args
 --------------------
 If you want to set query args, put ROA_ARGS_NAMES_MAPPING as dict in your django setting file 
 ```
@@ -112,7 +112,14 @@ ROA_ARGS_NAMES_MAPPING = {
 }
 ```
 
-
+Setting Request Header
+--------------------
+Change ROA_HEADERS in your django setting file to update the request header that send to service server
+```
+ROA_HEADERS = {
+    'test-header':'header-value',
+}
+```
 
 
   [David Larlet Django ROA lib]: http://code.larlet.fr/django-roa/src
