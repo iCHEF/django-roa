@@ -95,7 +95,7 @@ class Query(object):
 
         # Filtering
         for k, v in self.filters.iteritems():
-            key = '%s%s' % (ROA_ARGS_NAMES_MAPPING.get('FILTER_', 'filter_'), k)
+            key = '%s%s' % (ROA_ARGS_NAMES_MAPPING.get('FILTER_', ''), k)  # If don't set filter prefix, set prefix to None
             # v could be an object
             try:
                 v = v.id
