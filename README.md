@@ -25,14 +25,15 @@ Supported versions
 
 [![Build Status]]
 
--   Django 1.4, 1.5, 1.6, 1.7
+-   Django 1.8
 -   Python 2.6, 2.7
+-   Django Rest Framework 3.1.1
 
 Installation
 ------------
 
 ``` {.sourceCode .bash}
-$ pip install -e git+https://github.com/charles-vdulac/django-roa.git@master#egg=django_roa
+$ pip install -e git+https://github.com/iCHEF/django-roa.git@master#egg=django_roa
 ```
 
 Fork getting started
@@ -47,28 +48,23 @@ If you have an API output like this (typical DRF output):
 # Vary: Accept
 # Allow: GET, POST, HEAD, OPTIONS
 
-{
-    "count": 3,
-    "next": null,
-    "previous": null,
-    "results": [
-        {
+[
+    {
+        "id": 1,
+        "headline": "John's first story",
+        "pub_date": "2013-01-04",
+        "reporter": {
             "id": 1,
-            "headline": "John's first story",
-            "pub_date": "2013-01-04",
-            "reporter": {
+            "account": {
                 "id": 1,
-                "account": {
-                    "id": 1,
-                    "email": "john@example.com"
-                },
-                "first_name": "John",
-                "last_name": "Smith"
-            }
-        },
-        ...
-    ]
-}
+                "email": "john@example.com"
+            },
+            "first_name": "John",
+            "last_name": "Smith"
+        }
+    },
+    ...
+]
 ```
 
 Your code will look like this:
@@ -86,14 +82,19 @@ class Article(ROAModel):
     api_base_name = 'articles'
 
     @classmethod
-    def serializer(cls):
-        from .serializers import ArticleSerializer
-        return ArticleSerializer
-
-    @classmethod
     def get_resource_url_list(cls):
         return u'http://api.example.com/{base_name}/'.format(
             base_name=cls.api_base_name,
+```
+
+And you can use it as below:
+
+``` {.sourceCode .python}
+article = Article.objects.get(pk=1)
+# This will have a request GET http://api.example.com/articles/1/
+print article.headline
+>>> "John's first story"
+
 ```
 
 Setting URL Args
